@@ -1,3 +1,6 @@
+<head>
+  <link type="text/css" rel="stylesheet" href="/css/main.css" />
+</head>
 <html>
  <body>
   <?php
@@ -52,7 +55,8 @@
   $db = null;
   ?>
 
-  <h2>Sign the Guestbook</h2>
+  <h1 id="topname">Find Me</h1>
+
   <form action="/sign" method="post">
     <div><textarea name="content" rows="3" cols="60"></textarea></div>
     <div><input type="submit" value="Sign Guestbook"></div>
