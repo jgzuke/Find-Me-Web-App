@@ -26,7 +26,7 @@
   strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
     // Connect from App Engine.
     try{
-       $db = new pdo('mysql:unix_socket=/cloudsql/<your-project-id>:<your-instance-name>;dbname=guestbook', 'root', '');
+       $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
     }catch(PDOException $ex){
         die(json_encode(
             array('outcome' => false, 'message' => 'Unable to connect.')

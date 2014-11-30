@@ -1,8 +1,12 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
+  color: #ffffff;
   background-color: #3975A3;
+  text-align: center;
+  width: 80%;
+  margin-left: 10%;
 }
-#toptext {
-	vertical-align: middle;
-    margin-top:25vh;
+#topname {
+    margin-top:10vh;
+    font-size: 500%;
 }
