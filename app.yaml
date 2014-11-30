@@ -1,8 +1,12 @@
-application: helloworld
+application: findmewebapp
 version: 1
 runtime: php
 api_version: 1
 
 handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+- url: /sign
+  script: sign.php
 - url: /.*
-  script: helloworld.php
+  script: guestbook.php
