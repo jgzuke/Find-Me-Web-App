@@ -25,45 +25,50 @@
       <div id = "Find" class="col-md-6">
         <h2>Find Item</h2>
         <div id = "searchForm">
-          <form action="search.php" method="post">
+          <form name = "input" action="/search" method="post">
             <input type="text" name="query"> 
-            <input type="submit" value="Find">
+            <input type="submit" value="Find" name = "search">
           </form>
-
         </div>
         <?php
-          $db = null;
-          if (isset($_SERVER['SERVER_SOFTWARE']) &&
-          strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
-            // Connect from App Engine.
-            try{
-               $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
-            }catch(PDOException $ex){
-                die(json_encode(
-                    array('outcome' => false, 'message' => 'Unable to connect.')
-                    )
-                );
+          if(isset($_POST['search']))
+          {
+            // Form 1
+          } else
+          {
+            $db = null;
+            if (isset($_SERVER['SERVER_SOFTWARE']) &&
+            strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
+              // Connect from App Engine.
+              try{
+                 $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
+              }catch(PDOException $ex){
+                  die(json_encode(
+                      array('outcome' => false, 'message' => 'Unable to connect.')
+                      )
+                  );
+              }
+            } else {
+              // Connect from a development environment.
+              try{
+                 $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
+              }catch(PDOException $ex){
+                  die(json_encode(
+                      array('outcome' => false, 'message' => 'Unable to connect')
+                      )
+                  );
+              }
             }
-          } else {
-            // Connect from a development environment.
-            try{
-               $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
-            }catch(PDOException $ex){
-                die(json_encode(
-                    array('outcome' => false, 'message' => 'Unable to connect')
-                    )
-                );
+            try {
+              // Show existing guestbook entries.
+              foreach($db->query('SELECT * from entries') as $row) {
+                      echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
+               }
+            } catch (PDOException $ex) {
+              echo "An error occurred in reading or writing to guestbook.";
             }
+            $db = null;
           }
-          try {
-            // Show existing guestbook entries.
-            foreach($db->query('SELECT * from entries') as $row) {
-                    echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
-             }
-          } catch (PDOException $ex) {
-            echo "An error occurred in reading or writing to guestbook.";
-          }
-          $db = null;
           ?>
       </div>
       <div id = "Move" class="col-md-6">
