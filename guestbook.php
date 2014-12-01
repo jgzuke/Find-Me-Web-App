@@ -25,32 +25,14 @@
       <div id = "Find" class="col-md-6">
         <h2>Find Item</h2>
         <div id = "searchForm">
-          <form action="#" method="post">
+          <form action="" method="post">
             <input type="text" name="query"> 
             <input type="submit" value="Find" name = "search">
+            <input type="submit" value="Show All" name = "show">
           </form>
         </div>
         <?php
-          if(isset($_POST['search']))
-          {
-            $name=$_POST['query']; 
-             //connect  to the database 
-             $db=mysql_connect  ("127.0.0.1:8889", "root",  "temppass") or die ('I cannot connect to the database  because: ' . mysql_error()); 
-             //-select  the database to use 
-             $mydb=mysql_select_db("guestbook"); 
-              //-query  the database table 
-              $sql="SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"; 
-              //-run  the query against the mysql query function 
-              $result=mysql_query($sql); 
-              //-create  while loop and loop through result set 
-              while($row=mysql_fetch_array($result)){ 
-                      $item  =$row['myItemName']; 
-                      $location=$row['myItemLocation']; 
-                      echo "<div><strong>".$item."</strong>: ".$location."</div>";
-              } 
-          } else
-          {
-            $db = null;
+          $db = null;
             if (isset($_SERVER['SERVER_SOFTWARE']) &&
             strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
               // Connect from App Engine.
@@ -73,6 +55,21 @@
                   );
               }
             }
+          if(isset($_POST['search']))
+          {
+              $name=$_POST['query'];
+              //-query  the database table
+              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"); 
+              $query->execute();  
+              if (!$query->rowCount() == 0) {
+                  while ($results = $query->fetch()) {
+                      echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
+                  }
+              } else {
+                  echo 'Nothing found';
+              }
+              echo "<h1></h1>";
+          }
             try {
               // Show existing guestbook entries.
               foreach($db->query('SELECT * from entries') as $row) {
@@ -82,7 +79,6 @@
               echo "An error occurred in reading or writing to guestbook.";
             }
             $db = null;
-          }
           ?>
       </div>
       <div id = "Move" class="col-md-6">

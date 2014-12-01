@@ -1,11 +1,5 @@
 <?php
-header('Location: '."/guestbook");
-
-use google\appengine\api\users\User;
-use google\appengine\api\users\UserService;
-
-$user = UserService::getCurrentUser();
-
+header('Location: '."/");
 $db = null;
 if (isset($_SERVER['SERVER_SOFTWARE']) &&
 strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
@@ -30,7 +24,22 @@ strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
   }
 }
 try {
-  if (array_key_exists('name', $_POST)) {
+  if (array_key_exists('name', $_POST))
+  {
+    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"); 
+    $query->execute();  
+    if (!$query->rowCount() == 0)
+    {
+      while ($results = $query->fetch())
+      {
+          echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
+      }
+    } else {
+      echo 'Nothing found';
+    }
+    echo "<h1></h1>";
+
+
     $stmt = $db->prepare('INSERT INTO entries (myItemName, myItemLocation) VALUES (:name, :location)');
     $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
     $affected_rows = $stmt->rowCount();
