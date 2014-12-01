@@ -30,9 +30,9 @@ strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
   }
 }
 try {
-  if (array_key_exists('content', $_POST)) {
+  if (array_key_exists('name', $_POST)) {
     $stmt = $db->prepare('INSERT INTO entries (myItemName, myItemLocation) VALUES (:name, :location)');
-    $stmt->execute(array(':name' => htmlspecialchars($_POST['content']), ':location' => htmlspecialchars($_POST['content'])));
+    $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
     $affected_rows = $stmt->rowCount();
     // Log $affected_rows.
   }

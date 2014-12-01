@@ -23,7 +23,14 @@
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
-        <h2>Find</h2>
+        <h2>Find Item</h2>
+        <div id = "searchForm">
+          <form action="search.php" method="post">
+            <input type="text" name="query"> 
+            <input type="submit" value="Find">
+          </form>
+
+        </div>
         <?php
           $db = null;
           if (isset($_SERVER['SERVER_SOFTWARE']) &&
@@ -51,7 +58,7 @@
           try {
             // Show existing guestbook entries.
             foreach($db->query('SELECT * from entries') as $row) {
-                    echo "<div><strong>" . $row['myItemName'] . "</strong> wrote <br> " . $row['myItemLocation'] . "</div>";
+                    echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
              }
           } catch (PDOException $ex) {
             echo "An error occurred in reading or writing to guestbook.";
@@ -60,11 +67,14 @@
           ?>
       </div>
       <div id = "Move" class="col-md-6">
-        <h2>Move</h2>
-        <form action="/sign" method="post">
-          <div><textarea name="content" rows="3" cols="60"></textarea></div>
-          <div><input type="submit" value="Sign Guestbook"></div>
-        </form>
+        <h2>Move Item</h2>
+        <div id = "submitForm">
+          <form action="/sign" method="post">
+            <div><textarea name="name" rows="1" cols="30"></textarea></div>
+            <div><textarea name="location" rows="1" cols="30"></textarea></div>
+            <div><input type="submit" value="Move Item"></div>
+          </form>
+        </div>
       </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

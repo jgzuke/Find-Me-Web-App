@@ -10,3 +10,9 @@ body {
     margin-top:10vh;
     font-size: 500%;
 }
+#submitForm {
+	color: #000000;
+}
+#searchForm {
+	color: #000000;
+}
