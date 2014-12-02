@@ -28,7 +28,7 @@ try {
   {
     $name=$_POST['name'];
     $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '".$name."'"); 
-    $query->execute();  
+    $query->execute();
     if (!$query->rowCount() == 0)
     {
         $sql = "UPDATE entries SET myItemLocation='".$_POST['location']."' WHERE myItemName LIKE '".$name."'";
@@ -40,6 +40,9 @@ try {
       $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
       $affected_rows = $stmt->rowCount();
     }
+    $sql = "DELETE FROM entries WHERE myItemName LIKE '' OR myItemLocation LIKE ''"; 
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
   }
 } catch (PDOException $ex) {
   // Log error.

@@ -26,56 +26,64 @@
         <h2>Find Item</h2>
         <div id = "searchForm">
           <form action="" method="post">
-            <input type="text" name="query"> 
+            <input type="text" name="query" value="item"> 
             <input type="submit" value="Find" name = "search">
-            <input type="submit" value="Show All" name = "show">
+            <input type="submit" value="Delete" name = "delete">
           </form>
         </div>
         <?php
           $db = null;
-            if (isset($_SERVER['SERVER_SOFTWARE']) &&
-            strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
-              // Connect from App Engine.
-              try{
+            if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false)
+            {
+              try
+              {
                  $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
-              }catch(PDOException $ex){
-                  die(json_encode(
-                      array('outcome' => false, 'message' => 'Unable to connect.')
-                      )
-                  );
+              }catch(PDOException $ex)
+              {
+                  die(json_encode(array('outcome' => false, 'message' => 'Unable to connect.')));
               }
-            } else {
-              // Connect from a development environment.
-              try{
+            } else
+            {
+              try
+              {
                  $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
-              }catch(PDOException $ex){
-                  die(json_encode(
-                      array('outcome' => false, 'message' => 'Unable to connect')
-                      )
-                  );
+              }catch(PDOException $ex)
+              {
+                  die(json_encode(array('outcome' => false, 'message' => 'Unable to connect')));
               }
             }
           if(isset($_POST['search']))
           {
               $name=$_POST['query'];
-              //-query  the database table
               $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"); 
               $query->execute();  
-              if (!$query->rowCount() == 0) {
-                  while ($results = $query->fetch()) {
+              if (!$query->rowCount() == 0)
+              {
+                  while ($results = $query->fetch())
+                  {
                       echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
                   }
-              } else {
+              } else
+              {
                   echo 'Nothing found';
               }
               echo "<h1></h1>";
           }
-            try {
-              // Show existing guestbook entries.
-              foreach($db->query('SELECT * from entries') as $row) {
+          if(isset($_POST['delete']))
+          {
+              $name=$_POST['query'];
+              $sql = "DELETE FROM entries WHERE myItemName LIKE '".$name."'"; 
+              $stmt = $db->prepare($sql);
+              $stmt->execute();
+          }
+            try
+            {
+              foreach($db->query('SELECT * from entries') as $row)
+              {
                       echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
-               }
-            } catch (PDOException $ex) {
+              }
+            } catch (PDOException $ex)
+            {
               echo "An error occurred in reading or writing to guestbook.";
             }
             $db = null;
@@ -85,8 +93,8 @@
         <h2>Move Item</h2>
         <div id = "submitForm">
           <form action="/sign" method="post">
-            <div><textarea name="name" rows="1" cols="30"></textarea></div>
-            <div><textarea name="location" rows="1" cols="30"></textarea></div>
+            <div><input name="name" value="item" type="text"></input></div>
+            <div><input name="location" value="location" type="text"></input></div>
             <div><input type="submit" value="Move Item"></div>
           </form>
         </div>
