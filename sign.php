@@ -26,24 +26,20 @@ strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
 try {
   if (array_key_exists('name', $_POST))
   {
-    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"); 
+    $name=$_POST['name'];
+    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '".$name."'"); 
     $query->execute();  
     if (!$query->rowCount() == 0)
     {
-      while ($results = $query->fetch())
-      {
-          echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
-      }
-    } else {
-      echo 'Nothing found';
+        $sql = "UPDATE entries SET myItemLocation='".$_POST['location']."' WHERE myItemName LIKE '".$name."'";
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+    } else
+    {
+      $stmt = $db->prepare('INSERT INTO entries (myItemName, myItemLocation) VALUES (:name, :location)');
+      $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
+      $affected_rows = $stmt->rowCount();
     }
-    echo "<h1></h1>";
-
-
-    $stmt = $db->prepare('INSERT INTO entries (myItemName, myItemLocation) VALUES (:name, :location)');
-    $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
-    $affected_rows = $stmt->rowCount();
-    // Log $affected_rows.
   }
 } catch (PDOException $ex) {
   // Log error.
