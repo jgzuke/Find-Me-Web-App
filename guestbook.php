@@ -55,7 +55,7 @@
           if(isset($_POST['search']))
           {
               $name=$_POST['query'];
-              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '%" . $name .  "%'"); 
+              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName = '$name'"); 
               $query->execute();  
               if (!$query->rowCount() == 0)
               {
@@ -72,7 +72,7 @@
           if(isset($_POST['delete']))
           {
               $name=$_POST['query'];
-              $sql = "DELETE FROM entries WHERE myItemName LIKE '".$name."'"; 
+              $sql = "DELETE FROM entries WHERE myItemName = '$name'"; 
               $stmt = $db->prepare($sql);
               $stmt->execute();
           }

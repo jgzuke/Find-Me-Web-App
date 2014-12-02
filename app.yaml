@@ -10,5 +10,7 @@ handlers:
   static_dir: js
 - url: /sign
   script: sign.php
+- url: /login
+  script: login.php
 - url: /.*
   script: guestbook.php

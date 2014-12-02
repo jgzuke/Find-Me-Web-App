@@ -27,11 +27,11 @@ try {
   if (array_key_exists('name', $_POST))
   {
     $name=$_POST['name'];
-    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName LIKE '".$name."'"); 
+    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName = '$name'"); 
     $query->execute();
     if (!$query->rowCount() == 0)
     {
-        $sql = "UPDATE entries SET myItemLocation='".$_POST['location']."' WHERE myItemName LIKE '".$name."'";
+        $sql = "UPDATE entries SET myItemLocation='".$_POST['location']."' WHERE myItemName = '$name'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
     } else
