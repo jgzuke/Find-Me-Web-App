@@ -12,8 +12,11 @@
   use google\appengine\api\users\User;
   use google\appengine\api\users\UserService;
   $user = UserService::getCurrentUser();
-  //echo $user->getUserId();
-  $myTableName = 'bharj';
+  $tempName = $user->getEmail();
+  //$tempName = 'blarh';
+  echo $tempName;
+  $myTableName = preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
+  echo $myTableName;
   if(isset($user))
   {
     //echo sprintf('<h1>Welcome! (<a href="%s">sign out</a>)</h1>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
@@ -91,9 +94,10 @@
           }
             try
             {
-              foreach($db->query("SELECT * FROM $myTableName") as $row)
+              $name = (string)$myTableName;
+              foreach($db->query("SELECT * FROM $name") as $row)
               {
-                      echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
+                echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
               }
             } catch (PDOException $ex)
             {

@@ -3,8 +3,11 @@ header('Location: '."/");
 use google\appengine\api\users\User;
 use google\appengine\api\users\UserService;
 $user = UserService::getCurrentUser();
-$tempName = $user->getUserId();
-$myTableName = 'bharj';
+$tempName = $user->getEmail();
+//$tempName = 'blarh';
+echo $tempName;
+$myTableName = preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
+echo $tempName;
 $db = null;
 if (isset($_SERVER['SERVER_SOFTWARE']) &&
 strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
