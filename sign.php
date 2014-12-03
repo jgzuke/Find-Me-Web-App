@@ -5,7 +5,7 @@ if (isset($_SERVER['SERVER_SOFTWARE']) &&
 strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
   // Connect from App Engine.
   try{
-     $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
+     $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=itemlist', 'root', '');
   }catch(PDOException $ex){
       die(json_encode(
           array('outcome' => false, 'message' => 'Unable to connect.')
@@ -18,7 +18,6 @@ strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
      $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
   }catch(PDOException $ex){
       die(json_encode(
-          array('outcome' => false, 'message' => 'Unable to connect')
           )
       );
   }

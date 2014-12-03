@@ -45,7 +45,7 @@
             {
               try
               {
-                 $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=guestbook', 'root', 'temppass');
+                 $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=itemlist', 'root', '');
               }catch(PDOException $ex)
               {
                   die(json_encode(array('outcome' => false, 'message' => 'Unable to connect.')));
@@ -57,7 +57,6 @@
                  $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
               }catch(PDOException $ex)
               {
-                  die(json_encode(array('outcome' => false, 'message' => 'Unable to connect')));
               }
             }
           if(isset($_POST['search']))
