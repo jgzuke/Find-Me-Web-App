@@ -12,12 +12,6 @@
   use google\appengine\api\users\User;
   use google\appengine\api\users\UserService;
   $user = UserService::getCurrentUser();
-  if ($user) {
-    //echo 'Hello, ' . htmlspecialchars($user->getNickname());
-  }
-  else {
-    header('Location: ' . UserService::createLoginURL($_SERVER['REQUEST_URI']));
-  }
   ?>
   <h1 id="topname">Login</h1>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
@@ -26,9 +20,9 @@
         <h2>Login</h2>
         <div id = "loginForm">
           <form action="" method="post">
-            <input type="text" name="email" value="email"> 
-            <input type="text" name="password" value="password">
-            <input type="submit" value="Login" name = "login">
+            <div><input type="text" name="email" value="email"></div> 
+            <div><input type="text" name="password" value="password"></div>
+            <div><input type="submit" value="Login" name = "login"></div>
           </form>
         </div>
       </div>
@@ -36,10 +30,10 @@
         <h2>Sign up</h2>
         <div id = "signupForm">
           <form action="" method="post">
-            <input type="text" name="email" value="email"> 
-            <input type="text" name="password" value="password">
-            <input type="text" name="password2" value="confirm">
-            <input type="submit" value="Sign Up" name = "signup">
+            <div><input type="text" name="email" value="email"></div> 
+            <div><input type="text" name="password" value="password"></div>
+            <div><input type="text" name="password2" value="confirm"></div>
+            <div><input type="submit" value="Sign Up" name = "signup"></div>
           </form>
         </div>
       </div>

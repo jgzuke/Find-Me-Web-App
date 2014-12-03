@@ -11,24 +11,32 @@
  <?php
   use google\appengine\api\users\User;
   use google\appengine\api\users\UserService;
+
   $user = UserService::getCurrentUser();
-  if ($user) {
-    //echo 'Hello, ' . htmlspecialchars($user->getNickname());
-  }
-  else {
-    header('Location: ' . UserService::createLoginURL($_SERVER['REQUEST_URI']));
+  if (isset($user))
+  {
+    echo sprintf('Welcome, %s! (<a href="%s">sign out</a>)',
+                 $user->getNickname(),
+                 UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
+  } else {
+   UserService::createLoginUrl($_SERVER['REQUEST_URI']);
   }
   ?>
   <h1 id="topname">Find Me</h1>
+  <div id = "logoutForm">
+    <form action="/logout" method="post">
+      <input type="submit" value="Logout" name = "Logout"></div>
+    </form>
+  </div>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
         <h2>Find Item</h2>
         <div id = "searchForm">
           <form action="" method="post">
-            <input type="text" name="query" value="item"> 
-            <input type="submit" value="Find" name = "search">
-            <input type="submit" value="Delete" name = "delete">
+            <div><input type="text" name="query" value="item"></div>
+            <div><input type="submit" value="Find" name = "search">
+            <input type="submit" value="Delete" name = "delete"></div>
           </form>
         </div>
         <?php

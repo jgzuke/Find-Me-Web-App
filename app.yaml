@@ -12,5 +12,9 @@ handlers:
   script: sign.php
 - url: /login
   script: login.php
+- url: /logout
+  script: logout.php
 - url: /.*
   script: guestbook.php
+  login: required
+  auth_fail_action: redirect
