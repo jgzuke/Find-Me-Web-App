@@ -1,29 +1,14 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Find Me</title>
+    <title>New List</title>
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,600,700" rel="stylesheet" type="text/css" />
     <link href="css/bootstrap.min.css" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="css/main.css" />
 </head>
 <html>
  <body>
- <?php
-  use google\appengine\api\users\User;
-  use google\appengine\api\users\UserService;
-  $user = UserService::getCurrentUser();
-  //echo $user->getUserId();
-  $myTableName = 'bharj';
-  if(isset($user))
-  {
-    //echo sprintf('<h1>Welcome! (<a href="%s">sign out</a>)</h1>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
-    echo sprintf('<a href="%s" id="logoutbutton">Logout</a>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
-  } else
-  {
-    UserService::createLogoutUrl($_SERVER['REQUEST_URI']);
-  }
-  ?>
-  <h1 id="topname">Find Me</h1>
+  <h1 id="topname">New List</h1>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
@@ -55,20 +40,10 @@
               {
               }
             }
-            try
-            {
-                 $sql ="CREATE table $myTableName(
-                 myItemName VARCHAR(30) NOT NULL, 
-                 myItemLocation VARCHAR(30) NOT NULL);";
-                 $db->exec($sql);
-            } catch(PDOException $e)
-            {
-                echo $e->getMessage();
-            }
           if(isset($_POST['search']))
           {
               $name=$_POST['query'];
-              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM $myTableName WHERE myItemName = '$name'"); 
+              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName = '$name'"); 
               $query->execute();  
               if (!$query->rowCount() == 0)
               {
@@ -85,13 +60,13 @@
           if(isset($_POST['delete']))
           {
               $name=$_POST['query'];
-              $sql = "DELETE FROM $myTableName WHERE myItemName = '$name'"; 
+              $sql = "DELETE FROM entries WHERE myItemName = '$name'"; 
               $stmt = $db->prepare($sql);
               $stmt->execute();
           }
             try
             {
-              foreach($db->query("SELECT * FROM $myTableName") as $row)
+              foreach($db->query('SELECT * from entries') as $row)
               {
                       echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
               }
@@ -113,9 +88,6 @@
         </div>
       </div>
     </div>
-    <form action="/newlist" id = "newlistform">
-      <input type="submit" value="New List">
-    </form>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

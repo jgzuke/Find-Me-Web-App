@@ -1,5 +1,10 @@
 <?php
 header('Location: '."/");
+use google\appengine\api\users\User;
+use google\appengine\api\users\UserService;
+$user = UserService::getCurrentUser();
+$tempName = $user->getUserId();
+$myTableName = 'bharj';
 $db = null;
 if (isset($_SERVER['SERVER_SOFTWARE']) &&
 strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false) {
@@ -26,20 +31,21 @@ try {
   if (array_key_exists('name', $_POST))
   {
     $name=$_POST['name'];
-    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName = '$name'"); 
+    $query = $db->prepare("SELECT  myItemName, myItemLocation FROM $myTableName WHERE myItemName = '$name'"); 
     $query->execute();
     if (!$query->rowCount() == 0)
     {
-        $sql = "UPDATE entries SET myItemLocation='".$_POST['location']."' WHERE myItemName = '$name'";
+        $sql = "UPDATE $myTableName SET myItemLocation='".$_POST['location']."' WHERE myItemName = '$name'";
         $stmt = $db->prepare($sql);
         $stmt->execute();
     } else
     {
-      $stmt = $db->prepare('INSERT INTO entries (myItemName, myItemLocation) VALUES (:name, :location)');
+      $sql = "INSERT INTO $myTableName (myItemName, myItemLocation) VALUES (:name, :location)";
+      $stmt = $db->prepare($sql);
       $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
       $affected_rows = $stmt->rowCount();
     }
-    $sql = "DELETE FROM entries WHERE myItemName LIKE '' OR myItemLocation LIKE ''"; 
+    $sql = "DELETE FROM $myTableName WHERE myItemName LIKE '' OR myItemLocation LIKE ''"; 
     $stmt = $db->prepare($sql);
     $stmt->execute();
   }

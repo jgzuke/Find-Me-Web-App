@@ -10,11 +10,17 @@ body {
     margin-top:10vh;
     font-size: 500%;
 }
-#submitForm, #loginForm, #signupForm, #searchForm, #logoutForm {
+#submitForm, #loginForm, #signupForm, #searchForm, #logoutForm, #newlistform {
 	color: #000000;
 }
-#logoutForm {
+#logoutbutton {
 	position: absolute;
 	top: 20px;
+    right: 20px;
+	color: #000000;
+}
+#newlistform {
+	position: absolute;
+	top: 60px;
     right: 20px;
 }
