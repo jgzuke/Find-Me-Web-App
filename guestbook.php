@@ -11,7 +11,7 @@
  <?php
   use google\appengine\api\users\User;
   use google\appengine\api\users\UserService;
-
+  $url = UserService::createLogoutUrl($_SERVER['REQUEST_URI']);
   $user = UserService::getCurrentUser();
 
   if(isset($_POST['logout']))
@@ -24,9 +24,7 @@
   }
   ?>
   <h1 id="topname">Find Me</h1>
-  <form action="" method="post">
-    <input type="submit" value="logout" name = "logout">
-  </form>
+  <p><a href="$url">sign out</a>.)</p>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
