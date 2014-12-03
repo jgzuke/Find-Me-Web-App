@@ -13,21 +13,20 @@
   use google\appengine\api\users\UserService;
 
   $user = UserService::getCurrentUser();
-  if (isset($user))
+
+  if(isset($_POST['logout']))
   {
-    echo sprintf('Welcome, %s! (<a href="%s">sign out</a>)',
-                 $user->getNickname(),
-                 UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
-  } else {
-   UserService::createLoginUrl($_SERVER['REQUEST_URI']);
+    UserService::createLogoutUrl($_SERVER['REQUEST_URI']);
+  }
+  if (!isset($user))
+  {
+    UserService::createLoginUrl($_SERVER['REQUEST_URI']);
   }
   ?>
   <h1 id="topname">Find Me</h1>
-  <div id = "logoutForm">
-    <form action="/logout" method="post">
-      <input type="submit" value="Logout" name = "Logout"></div>
-    </form>
-  </div>
+  <form action="" method="post">
+    <input type="submit" value="logout" name = "logout">
+  </form>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
