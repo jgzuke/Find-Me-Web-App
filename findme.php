@@ -73,6 +73,8 @@ if(isset($_POST['opentable']))
         }
     }
 }
+$databaseshort = substr($_SERVER[REQUEST_URI], 1);
+echo $databaseshort;
 if(isset($_POST['moving']))
 {
   try
@@ -102,15 +104,32 @@ if(isset($_POST['moving']))
   } catch (PDOException $ex) {}
 }
 ?>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Find Me</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+              <?php
+                foreach($db->query("SELECT * FROM $myTableName") as $row)
+                {
+                  echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
+                }
+               ?>
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="newlist">New List</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
  <h1 id="topname">Find Me</h1>
- <?php
-  foreach($db->query("SELECT * FROM $myTableName") as $row)
-  {
-      echo '<form action="" method="post">
-          <input type="submit" value='.$row['itemTableShort'].' name = "opentable"></div>
-        </form>';
-  }
- ?>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div class="col-md-6">
