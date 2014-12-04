@@ -8,13 +8,11 @@ handlers:
   static_dir: css
 - url: /js
   static_dir: js
-- url: /sign
-  script: sign.php
 - url: /newlist
   script: newlist.php
 - url: /makenewlist
   script: makenewlist.php
 - url: /.*
-  script: guestbook.php
+  script: findme.php
   login: required
   auth_fail_action: redirect
