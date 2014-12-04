@@ -9,24 +9,71 @@
 <html>
  <body>
  <?php
-  use google\appengine\api\users\User;
-  use google\appengine\api\users\UserService;
-  $user = UserService::getCurrentUser();
-  $tempName = $user->getEmail();
-  //$tempName = 'blarh';
-  echo $tempName;
-  $myTableName = preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
-  echo $myTableName;
-  if(isset($user))
-  {
-    //echo sprintf('<h1>Welcome! (<a href="%s">sign out</a>)</h1>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
+use google\appengine\api\users\User;
+use google\appengine\api\users\UserService;
+$user=UserService::getCurrentUser();
+$tempName=$user->getEmail();
+$myTableName=preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
+$currentTable=$myTableName . 'default';
+if(isset($user)) {
     echo sprintf('<a href="%s" id="logoutbutton">Logout</a>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
-  } else
-  {
+} else {
     UserService::createLogoutUrl($_SERVER['REQUEST_URI']);
+}
+$db=null;
+if(isset($_SERVER['SERVER_SOFTWARE'])&&strpos($_SERVER['SERVER_SOFTWARE'], 'Google App Engine')!==false) {
+    try {
+        $db=new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=itemlist', 'root', '');
+    }
+    catch(PDOException $ex) {
+        die(json_encode(array(
+            'outcome'=>false,
+            'message'=>'Unable to connect.'
+        )));
+    }
+} else {
+    try {
+        $db=new pdo('mysql:host=127.0.0.1:8889;dbname=itemlist', 'root', 'temppass');
+    }
+    catch(PDOException $ex) {
+    }
+}
+$myDataTable=$myTableName . 'default';
+$results=$db->query("SHOW TABLES LIKE '$myTableName'"); // if there isnt a table to store users table names make one
+if($results->rowCount()==0) {
+    $sql="CREATE table $myTableName(itemTableName VARCHAR(80) NOT NULL, itemTableShort VARCHAR(30) NOT NULL);";
+    $db->exec($sql);
+    $dataTableName = "'".$myDataTable."'";
+    $sql = "INSERT INTO $myTableName (itemTableName, itemTableShort) VALUES (:name, :short)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(':name' => $dataTableName, ':short' => 'default'));
+    $affected_rows = $stmt->rowCount();
+}
+$results=$db->query("SHOW TABLES LIKE '$myDataTable'"); // if there isnt a default items table for user make one
+if($results->rowCount()==0) {
+    $sql="CREATE table $currentTable(myItemName VARCHAR(30) NOT NULL, myItemLocation VARCHAR(30) NOT NULL);";
+    $db->exec($sql);
+}
+if(isset($_POST['delete'])) {
+    $name=$_POST['query'];
+    $sql="DELETE FROM $currentTable WHERE myItemName = '$name'";
+    $stmt=$db->prepare($sql);
+    $stmt->execute();
+}
+if(isset($_POST['opentable']))
+{
+    
+}
+?>
+ <h1 id="topname">Find Me</h1>
+ <?php
+  foreach($db->query("SELECT * FROM $myTableName") as $row)
+  {
+      echo '<form action="" method="post">
+          <input type="submit" value='.$row['itemTableShort'].' name = "opentable"></div>
+        </form>';
   }
-  ?>
-  <h1 id="topname">Find Me</h1>
+ ?>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
       <div id = "Find" class="col-md-6">
@@ -39,73 +86,30 @@
           </form>
         </div>
         <?php
-          $db = null;
-            if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false)
-            {
-              try
-              {
-                 $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=itemlist', 'root', '');
-              }catch(PDOException $ex)
-              {
-                  die(json_encode(array('outcome' => false, 'message' => 'Unable to connect.')));
-              }
-            } else
-            {
-              try
-              {
-                 $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
-              }catch(PDOException $ex)
-              {
-              }
-            }
-            try
-            {
-                 $sql ="CREATE table $myTableName(
-                 myItemName VARCHAR(30) NOT NULL, 
-                 myItemLocation VARCHAR(30) NOT NULL);";
-                 $db->exec($sql);
-            } catch(PDOException $e)
-            {
-                echo $e->getMessage();
-            }
-          if(isset($_POST['search']))
-          {
-              $name=$_POST['query'];
-              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM $myTableName WHERE myItemName = '$name'"); 
-              $query->execute();  
-              if (!$query->rowCount() == 0)
-              {
-                  while ($results = $query->fetch())
-                  {
-                      echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
-                  }
-              } else
-              {
-                  echo 'Nothing found';
-              }
-              echo "<h1></h1>";
-          }
-          if(isset($_POST['delete']))
-          {
-              $name=$_POST['query'];
-              $sql = "DELETE FROM $myTableName WHERE myItemName = '$name'"; 
-              $stmt = $db->prepare($sql);
-              $stmt->execute();
-          }
-            try
-            {
-              $name = (string)$myTableName;
-              foreach($db->query("SELECT * FROM $name") as $row)
-              {
-                echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
-              }
-            } catch (PDOException $ex)
-            {
-              echo "An error occurred in reading or writing to guestbook.";
-            }
-            $db = null;
-          ?>
-      </div>
+if(isset($_POST['search'])) {
+    $name=$_POST['query'];
+    $query=$db->prepare("SELECT  myItemName, myItemLocation FROM $currentTable WHERE myItemName = '$name'");
+    $query->execute();
+    if(!$query->rowCount()==0) {
+        while($results=$query->fetch()) {
+            echo "<div><strong>" . $results['myItemName'] . "</strong>: " . $results['myItemLocation'] . "</div>";
+        }
+    } else {
+        echo 'Nothing found';
+    }
+    echo "<h1></h1>";
+}
+try {
+    $name=(string) $currentTable;
+    foreach($db->query("SELECT * FROM $name") as $row) {
+        echo "<div><strong>" . $row['myItemName'] . "</strong>: " . $row['myItemLocation'] . "</div>";
+    }
+}
+catch(PDOException $ex) {
+    echo "An error occurred in reading or writing to guestbook.";
+}
+?>
+     </div>
       <div id = "Move" class="col-md-6">
         <h2>Move Item</h2>
         <div id = "submitForm">
@@ -125,5 +129,6 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/js-image-slider.js" type="text/javascript"></script>
+    <?php $db=null; ?>
   </body>
 </html>
