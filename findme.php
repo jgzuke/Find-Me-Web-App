@@ -60,21 +60,16 @@ if(isset($_POST['delete'])) {
     $stmt=$db->prepare($sql);
     $stmt->execute();
 }
-//echo $currentTable;
-if(isset($_POST['opentable']))
+$name = substr($_SERVER[REQUEST_URI], 1);
+if(empty($name)) $name='default';
+$query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
+$query->execute();
+if(!$query->rowCount()==0)
 {
-    $name = $_POST['opentable'];
-    $query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
-    $query->execute();
-    if(!$query->rowCount()==0)
-    {
-        while($results=$query->fetch()) {
-            $currentTable = $results['itemTableName'];
-        }
+    while($results=$query->fetch()) {
+        $currentTable = $results['itemTableName'];
     }
 }
-$databaseshort = substr($_SERVER[REQUEST_URI], 1);
-echo $databaseshort;
 if(isset($_POST['moving']))
 {
   try
