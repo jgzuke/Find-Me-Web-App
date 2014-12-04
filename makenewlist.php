@@ -30,31 +30,34 @@ $myUserName = preg_replace('/[^A-Za-z0-9\-]/', '', $userName);
 $firstUserName = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST['email1']);
 $secondUserName = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST['email2']);
 $thirdUserName = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST['email3']);
-$dataTableName = "'".$myUserName.$_POST['name']."'";
+$dataTableName = $myUserName.$_POST['name'];
 $dataTableShort = "'".$_POST['name']."'";
+$dataTableNameS = $myUserName.$_POST['name'];
+$dataTableShortS = $_POST['name'];
 
 
 $newTableName = $userName.$_POST['name'];
 $sql="CREATE table $dataTableName(myItemName VARCHAR(30) NOT NULL, myItemLocation VARCHAR(30) NOT NULL);";
 $db->exec($sql);
+
 $sql = "INSERT INTO $myUserName (itemTableName, itemTableShort) VALUES (:name, :short)";
 $stmt = $db->prepare($sql);
-$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShort));
+$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShortS));
 $affected_rows = $stmt->rowCount();
 
 $sql = "INSERT INTO $firstUserName (itemTableName, itemTableShort) VALUES (:name, :short)";
 $stmt = $db->prepare($sql);
-$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShort));
+$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShortS));
 $affected_rows = $stmt->rowCount();
 
 $sql = "INSERT INTO $secondUserName (itemTableName, itemTableShort) VALUES (:name, :short)";
 $stmt = $db->prepare($sql);
-$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShort));
+$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShortS));
 $affected_rows = $stmt->rowCount();
 
 $sql = "INSERT INTO $thirdUserName (itemTableName, itemTableShort) VALUES (:name, :short)";
 $stmt = $db->prepare($sql);
-$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShort));
+$stmt->execute(array(':name' => $dataTableName, ':short' => $dataTableShortS));
 $affected_rows = $stmt->rowCount();
 
 

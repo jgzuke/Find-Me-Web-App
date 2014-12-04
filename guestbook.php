@@ -43,13 +43,13 @@ $results=$db->query("SHOW TABLES LIKE '$myTableName'"); // if there isnt a table
 if($results->rowCount()==0) {
     $sql="CREATE table $myTableName(itemTableName VARCHAR(80) NOT NULL, itemTableShort VARCHAR(30) NOT NULL);";
     $db->exec($sql);
-    $dataTableName = "'".$myDataTable."'";
+    $dataTableName = $myDataTable;
     $sql = "INSERT INTO $myTableName (itemTableName, itemTableShort) VALUES (:name, :short)";
     $stmt = $db->prepare($sql);
     $stmt->execute(array(':name' => $dataTableName, ':short' => 'default'));
     $affected_rows = $stmt->rowCount();
 }
-$results=$db->query("SHOW TABLES LIKE '$myDataTable'"); // if there isnt a default items table for user make one
+$results=$db->query("SHOW TABLES LIKE '$currentTable'"); // if there isnt a default items table for user make one
 if($results->rowCount()==0) {
     $sql="CREATE table $currentTable(myItemName VARCHAR(30) NOT NULL, myItemLocation VARCHAR(30) NOT NULL);";
     $db->exec($sql);
@@ -60,9 +60,21 @@ if(isset($_POST['delete'])) {
     $stmt=$db->prepare($sql);
     $stmt->execute();
 }
+//echo $currentTable;
 if(isset($_POST['opentable']))
 {
-    
+    echo $_POST['opentable'];
+    $name = $_POST['opentable'];
+    $query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
+    $query->execute();
+    if(!$query->rowCount()==0)
+    {
+        while($results=$query->fetch()) {
+            $currentTable = $results['itemTableName'];
+            echo $currentTable.'PPP';
+            echo $results['itemTableShort'];
+        }
+    }
 }
 ?>
  <h1 id="topname">Find Me</h1>
