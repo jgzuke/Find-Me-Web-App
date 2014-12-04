@@ -14,7 +14,10 @@ use google\appengine\api\users\UserService;
 $user=UserService::getCurrentUser();
 $tempName=$user->getEmail();
 $myTableName=preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
-$currentTable=$myTableName . 'default';
+if(!isset ($currentTable))
+{
+  $currentTable=$myTableName . 'default';
+}
 if(isset($user)) {
     echo sprintf('<a href="%s" id="logoutbutton">Logout</a>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
 } else {
@@ -63,7 +66,6 @@ if(isset($_POST['delete'])) {
 //echo $currentTable;
 if(isset($_POST['opentable']))
 {
-    echo $_POST['opentable'];
     $name = $_POST['opentable'];
     $query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
     $query->execute();
@@ -71,8 +73,6 @@ if(isset($_POST['opentable']))
     {
         while($results=$query->fetch()) {
             $currentTable = $results['itemTableName'];
-            echo $currentTable.'PPP';
-            echo $results['itemTableShort'];
         }
     }
 }
@@ -128,6 +128,7 @@ catch(PDOException $ex) {
           <form action="/sign" method="post">
             <div><input name="name" value="item" type="text"></input></div>
             <div><input name="location" value="location" type="text"></input></div>
+            <input type='hidden' name='tabletouse' value="<?php echo "$currentTable"; ?>"></input>
             <div><input type="submit" value="Move Item"></div>
           </form>
         </div>
