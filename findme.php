@@ -170,6 +170,54 @@ catch(PDOException $ex) {
         </div>
       </div>
     </div>
+
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  New List
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="myModalLabel">New List</h2>
+      </div>
+      <div class="modal-body">
+          <form role="form" action="/makenewlist" method="post">
+            <div class="form-group">
+              <label for="basename">Email</label>
+              <input type="text" class="form-control" placeholder="Enter name" name="name" value="name" id="basename">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email</label>
+              <input type="email" class="form-control" placeholder="Enter email" name="email1" value="email1" id="exampleInputEmail1">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail2">Email</label>
+              <input type="email" class="form-control" placeholder="Enter email" name="email2" value="email2" id="exampleInputEmail2">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail3">Email</label>
+              <input type="email" class="form-control" placeholder="Enter email" name="email3" value="email3" id="exampleInputEmail3">
+            </div>
+            <div><button type="submit" class="btn btn-default" value="Create" name = "Create">Create</button>
+            <button type="submit" class="btn btn-default" value="Cancel" name = "Cancel">Cancel</button></div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
