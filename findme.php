@@ -116,21 +116,25 @@ if(isset($_POST['moving']))
                 {
                   echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
                 }
-                echo "<li><a href='newlist'>New List</a></li>";
                 echo "<li><a href=".UserService::createLogoutUrl($_SERVER['REQUEST_URI']).">Logout</a><li>";
                ?>
+               <button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#newListModal">New List</button>
           </ul>
+          
         </div><!--/.nav-collapse -->
       </div>
     </nav>
     <div class="row" id = "myrows">
       <div class="col-md-6">
-        <h2>Find Item</h2>
+        <h1>Find Item</h1>
         <div class = "myforms">
-          <form action="" method="post">
-            <div><input type="text" name="query" value="item"></div>
-            <div><input type="submit" value="Find" name = "search">
-            <input type="submit" value="Delete" name = "delete"></div>
+          <form role="form" action="" method="post">
+            <div class="form-group">
+              <label for="lookingfor">What are you looking for</label>
+              <input type="text" class="form-control" placeholder="Enter name" name="query" value="item" id="lookingfor">
+            </div>
+            <div><button type="submit" class="btn btn-default" value="Find" name = "search">Find</button>
+            <button type="submit" class="btn btn-primary" value="Delete" name = "delete">Delete</button></div>
           </form>
         </div>
         <?php
@@ -159,13 +163,19 @@ catch(PDOException $ex) {
 ?>
      </div>
       <div class="col-md-6">
-        <h2>Move Item</h2>
+        <h1>Move Item</h1>
         <div class = "myforms">
-          <form action="" method="post">
-            <div><input name="name" value="item" type="text"></input></div>
-            <div><input name="location" value="location" type="text"></input></div>
+          <form role="form" action="" method="post">
+            <div class="form-group">
+              <label for="whatisit">What did you move</label>
+              <input type="text" class="form-control" placeholder="Enter name" name="name" value="item" id="whatisit">
+            </div>
+            <div>
+              <label for="whereisit">Where is it now</label>
+              <input type="text" class="form-control" placeholder="Enter name" name="location" value="location" id="whereisit">
+            </div>
             <input type='hidden' name='tabletouse' value="<?php echo "$currentTable"; ?>"></input>
-            <div><input type="submit" value="Move Item" name = "moving"></div>
+            <div><button type="submit" class="btn btn-primary" value="Move Item" name = "moving">Move Item</button></div>
           </form>
         </div>
       </div>
@@ -173,13 +183,10 @@ catch(PDOException $ex) {
 
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  New List
-</button>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+
+<div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -189,33 +196,34 @@ catch(PDOException $ex) {
       <div class="modal-body">
           <form role="form" action="/makenewlist" method="post">
             <div class="form-group">
-              <label for="basename">Email</label>
+              <label for="basename">List Name</label>
               <input type="text" class="form-control" placeholder="Enter name" name="name" value="name" id="basename">
             </div>
             <div class="form-group">
-              <label for="exampleInputEmail1">Email</label>
+              <label for="exampleInputEmail1">Friends</label>
               <input type="email" class="form-control" placeholder="Enter email" name="email1" value="email1" id="exampleInputEmail1">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputEmail2">Email</label>
               <input type="email" class="form-control" placeholder="Enter email" name="email2" value="email2" id="exampleInputEmail2">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputEmail3">Email</label>
               <input type="email" class="form-control" placeholder="Enter email" name="email3" value="email3" id="exampleInputEmail3">
             </div>
-            <div><button type="submit" class="btn btn-default" value="Create" name = "Create">Create</button>
-            <button type="submit" class="btn btn-default" value="Cancel" name = "Cancel">Cancel</button></div>
+            <div><button type="submit" class="btn btn-primary" value="Create" name = "Create">Create</button></div>
           </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
 </div>
-
+<div class="modal fade" id="foundItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="myModalLabel">Where is it?</h2>
+      </div>
+      <div class="modal-body">
+          <h3>What What</h3>
+      </div>
+    </div>
+  </div>
+</div>
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
