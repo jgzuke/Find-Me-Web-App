@@ -7,86 +7,19 @@
   <link type="text/css" rel="stylesheet" href="css/main.css" />
 </head>
 <html>
- <body>
-  <h1 id="topname">New List</h1>
-  <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
-    <div class="row">
-      <div id = "Find" class="col-md-6">
-        <h2>Find Item</h2>
-        <div id = "searchForm">
-          <form action="" method="post">
-            <div><input type="text" name="query" value="item"></div>
-            <div><input type="submit" value="Find" name = "search">
-            <input type="submit" value="Delete" name = "delete"></div>
-          </form>
-        </div>
-        <?php
-          $db = null;
-            if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],'Google App Engine') !== false)
-            {
-              try
-              {
-                 $db = new pdo('mysql:unix_socket=/cloudsql/findmewebapp:cloudinstanceid;dbname=itemlist', 'root', '');
-              }catch(PDOException $ex)
-              {
-                  die(json_encode(array('outcome' => false, 'message' => 'Unable to connect.')));
-              }
-            } else
-            {
-              try
-              {
-                 $db = new pdo('mysql:host=127.0.0.1:8889;dbname=guestbook', 'root', 'temppass');
-              }catch(PDOException $ex)
-              {
-              }
-            }
-          if(isset($_POST['search']))
-          {
-              $name=$_POST['query'];
-              $query = $db->prepare("SELECT  myItemName, myItemLocation FROM entries WHERE myItemName = '$name'"); 
-              $query->execute();  
-              if (!$query->rowCount() == 0)
-              {
-                  while ($results = $query->fetch())
-                  {
-                      echo "<div><strong>".$results['myItemName']."</strong>: ".$results['myItemLocation'] . "</div>";
-                  }
-              } else
-              {
-                  echo 'Nothing found';
-              }
-              echo "<h1></h1>";
-          }
-          if(isset($_POST['delete']))
-          {
-              $name=$_POST['query'];
-              $sql = "DELETE FROM entries WHERE myItemName = '$name'"; 
-              $stmt = $db->prepare($sql);
-              $stmt->execute();
-          }
-            try
-            {
-              foreach($db->query('SELECT * from entries') as $row)
-              {
-                      echo "<div><strong>".$row['myItemName']."</strong>: ".$row['myItemLocation'] . "</div>";
-              }
-            } catch (PDOException $ex)
-            {
-              echo "An error occurred in reading or writing to guestbook.";
-            }
-            $db = null;
-          ?>
-      </div>
-      <div id = "Move" class="col-md-6">
-        <h2>Move Item</h2>
-        <div id = "submitForm">
-          <form action="/sign" method="post">
-            <div><input name="name" value="item" type="text"></input></div>
-            <div><input name="location" value="location" type="text"></input></div>
-            <div><input type="submit" value="Move Item"></div>
-          </form>
-        </div>
-      </div>
+  <body>
+    <h1 id="topname">New List</h1>
+    <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
+    <div class = "myforms">
+      <form action="/makenewlist" method="post">
+        <div><input type="text" name="name" value="name"></div>
+        <div><input type="text" name="email1" value="email1"></div>
+        <div><input type="text" name="email2" value="email2"></div>
+        <div><input type="text" name="email3" value="email3"></div>
+
+        <div><input type="submit" value="Create" name = "Create">
+        <input type="submit" value="Cancel" name = "Cancel"></div>
+      </form>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

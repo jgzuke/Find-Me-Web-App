@@ -10,7 +10,7 @@ body {
     margin-top:10vh;
     font-size: 500%;
 }
-#submitForm, #loginForm, #signupForm, #searchForm, #logoutForm, #newlistform {
+.myforms {
 	color: #000000;
 }
 #logoutbutton {
@@ -20,6 +20,7 @@ body {
 	color: #000000;
 }
 #newlistform {
+	color: #000000;
 	position: absolute;
 	top: 60px;
     right: 20px;

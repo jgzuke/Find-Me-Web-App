@@ -76,9 +76,9 @@ if(isset($_POST['opentable']))
  ?>
   <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
     <div class="row">
-      <div id = "Find" class="col-md-6">
+      <div class="col-md-6">
         <h2>Find Item</h2>
-        <div id = "searchForm">
+        <div class = "myforms">
           <form action="" method="post">
             <div><input type="text" name="query" value="item"></div>
             <div><input type="submit" value="Find" name = "search">
@@ -110,9 +110,9 @@ catch(PDOException $ex) {
 }
 ?>
      </div>
-      <div id = "Move" class="col-md-6">
+      <div class="col-md-6">
         <h2>Move Item</h2>
-        <div id = "submitForm">
+        <div class = "myforms">
           <form action="/sign" method="post">
             <div><input name="name" value="item" type="text"></input></div>
             <div><input name="location" value="location" type="text"></input></div>

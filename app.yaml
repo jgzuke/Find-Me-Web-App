@@ -12,6 +12,8 @@ handlers:
   script: sign.php
 - url: /newlist
   script: newlist.php
+- url: /makenewlist
+  script: makenewlist.php
 - url: /.*
   script: guestbook.php
   login: required
