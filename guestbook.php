@@ -14,10 +14,7 @@ use google\appengine\api\users\UserService;
 $user=UserService::getCurrentUser();
 $tempName=$user->getEmail();
 $myTableName=preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
-if(!isset ($currentTable))
-{
-  $currentTable=$myTableName . 'default';
-}
+$currentTable=$myTableName . 'default';
 if(isset($user)) {
     echo sprintf('<a href="%s" id="logoutbutton">Logout</a>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
 } else {
@@ -76,6 +73,34 @@ if(isset($_POST['opentable']))
         }
     }
 }
+if(isset($_POST['moving']))
+{
+  try
+  {
+    $currentTable=$_POST['tabletouse'];
+    if (array_key_exists('name', $_POST))
+    {
+      $name=$_POST['name'];
+      $query = $db->prepare("SELECT  myItemName, myItemLocation FROM $currentTable WHERE myItemName = '$name'"); 
+      $query->execute();
+      if (!$query->rowCount() == 0)
+      {
+          $sql = "UPDATE $currentTable SET myItemLocation='".$_POST['location']."' WHERE myItemName = '$name'";
+          $stmt = $db->prepare($sql);
+          $stmt->execute();
+      } else
+      {
+        $sql = "INSERT INTO $currentTable (myItemName, myItemLocation) VALUES (:name, :location)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(':name' => htmlspecialchars($_POST['name']), ':location' => htmlspecialchars($_POST['location'])));
+        $affected_rows = $stmt->rowCount();
+      }
+      $sql = "DELETE FROM $currentTable WHERE myItemName LIKE '' OR myItemLocation LIKE ''"; 
+      $stmt = $db->prepare($sql);
+      $stmt->execute();
+    }
+  } catch (PDOException $ex) {}
+}
 ?>
  <h1 id="topname">Find Me</h1>
  <?php
@@ -125,11 +150,11 @@ catch(PDOException $ex) {
       <div class="col-md-6">
         <h2>Move Item</h2>
         <div class = "myforms">
-          <form action="/sign" method="post">
+          <form action="" method="post">
             <div><input name="name" value="item" type="text"></input></div>
             <div><input name="location" value="location" type="text"></input></div>
             <input type='hidden' name='tabletouse' value="<?php echo "$currentTable"; ?>"></input>
-            <div><input type="submit" value="Move Item"></div>
+            <div><input type="submit" value="Move Item" name = "moving"></div>
           </form>
         </div>
       </div>
