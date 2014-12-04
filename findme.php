@@ -15,9 +15,8 @@ $user=UserService::getCurrentUser();
 $tempName=$user->getEmail();
 $myTableName=preg_replace('/[^A-Za-z0-9\-]/', '', $tempName);
 $currentTable=$myTableName . 'default';
-if(isset($user)) {
-    echo sprintf('<a href="%s" id="logoutbutton">Logout</a>', UserService::createLogoutUrl($_SERVER['REQUEST_URI']));
-} else {
+if(!isset($user))
+{
     UserService::createLogoutUrl($_SERVER['REQUEST_URI']);
 }
 $db=null;
@@ -60,7 +59,7 @@ if(isset($_POST['delete'])) {
     $stmt=$db->prepare($sql);
     $stmt->execute();
 }
-$name = substr($_SERVER[REQUEST_URI], 1);
+$name = substr($_SERVER['REQUEST_URI'], 1);
 if(empty($name)) $name='default';
 $query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
 $query->execute();
@@ -99,7 +98,7 @@ if(isset($_POST['moving']))
   } catch (PDOException $ex) {}
 }
 ?>
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -108,7 +107,7 @@ if(isset($_POST['moving']))
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Find Me</a>
+          <a class="navbar-brand" href="">Find Me</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -117,16 +116,14 @@ if(isset($_POST['moving']))
                 {
                   echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
                 }
+                echo "<li><a href='newlist'>New List</a></li>";
+                echo "<li><a href=".UserService::createLogoutUrl($_SERVER['REQUEST_URI']).">Logout</a><li>";
                ?>
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="newlist">New List</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
- <h1 id="topname">Find Me</h1>
-  <hr width="100%"  background-color="#FFFFFF" size="4" height = "2px"></hr>
-    <div class="row">
+    <div class="row" id = "myrows">
       <div class="col-md-6">
         <h2>Find Item</h2>
         <div class = "myforms">
@@ -173,9 +170,6 @@ catch(PDOException $ex) {
         </div>
       </div>
     </div>
-    <form action="/newlist" id = "newlistform">
-      <input type="submit" value="New List">
-    </form>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
