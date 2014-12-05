@@ -59,6 +59,26 @@ if(isset($_POST['delete'])) {
     $stmt=$db->prepare($sql);
     $stmt->execute();
 }
+if(isset($_POST['delete']))
+{
+  $name=$_POST['todelete'];
+  $query = $db->prepare("SELECT itemTableName FROM $myTableName WHERE itemTableShort = '$name'"); 
+  $query->execute();
+  if (!$query->rowCount() == 0)
+  {
+    while($results=$query->fetch())
+    {
+      $deleteTable = $results['itemTableName'];
+      echo $deleteTable;
+
+      $stmt = $db->prepare("DROP TABLE IF EXISTS $deleteTable");
+      $stmt->execute();
+    }
+  }
+  $sql="DELETE FROM $myTableName WHERE itemTableShort = '$name'";
+  $stmt=$db->prepare($sql);
+  $stmt->execute();
+}
 $name = substr($_SERVER['REQUEST_URI'], 1);
 if(empty($name)) $name='default';
 $query=$db->prepare("SELECT itemTableShort, itemTableName FROM $myTableName WHERE itemTableShort = '$name'");
@@ -190,13 +210,10 @@ if(isset($_POST['showall'])) {
       <?php
         foreach($db->query("SELECT * FROM $myTableName") as $row)
         {
-          echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
-          echo "
-            <form role='form' action='' method='post'> <div class='form-group'>
+          echo "<form role='form' action='' method='post'> <div class='form-group'>
                           <input type='hidden' name='todelete' value=".$row['itemTableShort']."></input>
                           <button type='submit' class='btn btn-primary' value='DeleteDB' name = 'delete'>".$row['itemTableShort']."</button>
-                    </div> </form>
-          ";
+                    </div> </form>";
         }
       ?>
         
