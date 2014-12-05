@@ -9,6 +9,9 @@ body {
 .myforms {
 	color: #777;
 }
-#myrows {
-	margin-top:80px;
+.mytext {
+	font-size: 400%;
+}
+#mymargin {
+	height: 170px;
 }

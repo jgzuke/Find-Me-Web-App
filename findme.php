@@ -101,12 +101,6 @@ if(isset($_POST['moving']))
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
           <a class="navbar-brand" href="">Find Me</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
@@ -118,22 +112,24 @@ if(isset($_POST['moving']))
                 }
                 echo "<li><a href=".UserService::createLogoutUrl($_SERVER['REQUEST_URI']).">Logout</a><li>";
                ?>
-               <button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#newListModal">New List</button>
+               <button type="button" style="color: #777" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#deleteListModal">Delete List</button>
+               <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#newListModal">New List</button>
           </ul>
           
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+    <div class="container" id = "mymargin"></div>
     <div class="row" id = "myrows">
       <div class="col-md-6">
-        <h1>Find Item</h1>
+        <h1 class="mytext">Find Item</h1>
         <div class = "myforms">
           <form role="form" action="" method="post">
             <div class="form-group">
               <label for="lookingfor">What are you looking for</label>
               <input type="text" class="form-control" placeholder="Enter name" name="query" value="item" id="lookingfor">
             </div>
-            <div><button type="submit" class="btn btn-default" value="Find" name = "search">Find</button>
+            <div><button type="submit" class="btn btn-default" style="color: #777" value="Find" name = "search">Find</button>
             <button type="submit" class="btn btn-primary" value="Delete" name = "delete">Delete</button></div>
           </form>
         </div>
@@ -163,14 +159,14 @@ catch(PDOException $ex) {
 ?>
      </div>
       <div class="col-md-6">
-        <h1>Move Item</h1>
+        <h1 class="mytext">Move Item</h1>
         <div class = "myforms">
           <form role="form" action="" method="post">
             <div class="form-group">
               <label for="whatisit">What did you move</label>
               <input type="text" class="form-control" placeholder="Enter name" name="name" value="item" id="whatisit">
             </div>
-            <div>
+            <div class="form-group">
               <label for="whereisit">Where is it now</label>
               <input type="text" class="form-control" placeholder="Enter name" name="location" value="location" id="whereisit">
             </div>
@@ -180,12 +176,35 @@ catch(PDOException $ex) {
         </div>
       </div>
     </div>
-
-
-
-
-
-
+<div class="modal fade" id="deleteListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="myModalLabel">New List</h2>
+      </div>
+      <div class="modal-body">
+          <form role="form" action="/makenewlist" method="post">
+            <div class="form-group">
+              <label for="basename">List Name</label>
+              <input type="text" class="form-control" placeholder="Enter name" name="name" value="name" id="basename">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Friends</label>
+              <input type="email" class="form-control" placeholder="Enter email" name="email1" value="email1" id="exampleInputEmail1">
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Enter email" name="email2" value="email2" id="exampleInputEmail2">
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Enter email" name="email3" value="email3" id="exampleInputEmail3">
+            </div>
+            <div><button type="submit" class="btn btn-primary" value="Create" name = "Create">Create</button></div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -202,7 +221,11 @@ catch(PDOException $ex) {
             <div class="form-group">
               <label for="exampleInputEmail1">Friends</label>
               <input type="email" class="form-control" placeholder="Enter email" name="email1" value="email1" id="exampleInputEmail1">
+            </div>
+            <div class="form-group">
               <input type="email" class="form-control" placeholder="Enter email" name="email2" value="email2" id="exampleInputEmail2">
+            </div>
+            <div class="form-group">
               <input type="email" class="form-control" placeholder="Enter email" name="email3" value="email3" id="exampleInputEmail3">
             </div>
             <div><button type="submit" class="btn btn-primary" value="Create" name = "Create">Create</button></div>
@@ -231,6 +254,7 @@ catch(PDOException $ex) {
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/js-image-slider.js" type="text/javascript"></script>
+    <script src="js/myjs.js"></script>
     <?php $db=null; ?>
   </body>
 </html>
