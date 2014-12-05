@@ -129,14 +129,15 @@ if(isset($_POST['moving']))
               <label for="lookingfor">What are you looking for</label>
               <input type="text" class="form-control" placeholder="Enter name" name="query" value="item" id="lookingfor">
             </div>
-            <div><button type="submit" class="btn btn-default" style="color: #777" value="Find" name = "search">Find</button>
-            <button type="submit" class="btn btn-primary" value="Delete" name = "delete">Delete</button></div>
+            <div><button type="submit" class="btn btn-primary" value="Find" name = "search">Find</button>
+            <button type="submit" class="btn btn-default" style="color: #777" value="Show All" name = "showall">Show All</button>
+            <button type="submit" class="btn btn-default" style="color: #777" value="Delete" name = "delete">Delete</button></div>
           </form>
         </div>
         <?php
 if(isset($_POST['search'])) {
     $name=$_POST['query'];
-    $query=$db->prepare("SELECT  myItemName, myItemLocation FROM $currentTable WHERE myItemName = '$name'");
+    $query=$db->prepare("SELECT  myItemName, myItemLocation FROM $currentTable WHERE myItemName LIKE '%" . $name .  "%'");
     $query->execute();
     if(!$query->rowCount()==0) {
         while($results=$query->fetch()) {
@@ -147,14 +148,16 @@ if(isset($_POST['search'])) {
     }
     echo "<h1></h1>";
 }
-try {
-    $name=(string) $currentTable;
-    foreach($db->query("SELECT * FROM $name") as $row) {
-        echo "<div><strong>" . $row['myItemName'] . "</strong>: " . $row['myItemLocation'] . "</div>";
-    }
-}
-catch(PDOException $ex) {
-    echo "An error occurred in reading or writing to guestbook.";
+if(isset($_POST['showall'])) {
+  try {
+      $name=(string) $currentTable;
+      foreach($db->query("SELECT * FROM $name") as $row) {
+          echo "<div><strong>" . $row['myItemName'] . "</strong>: " . $row['myItemLocation'] . "</div>";
+      }
+  }
+  catch(PDOException $ex) {
+      echo "An error occurred in reading or writing to guestbook.";
+  }
 }
 ?>
      </div>
@@ -179,28 +182,24 @@ catch(PDOException $ex) {
 <div class="modal fade" id="deleteListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header" background="#cccccc">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h2 class="modal-title" id="myModalLabel">New List</h2>
+        <h2 class="modal-title" id="myModalLabel">Delete List</h2>
       </div>
       <div class="modal-body">
-          <form role="form" action="/makenewlist" method="post">
-            <div class="form-group">
-              <label for="basename">List Name</label>
-              <input type="text" class="form-control" placeholder="Enter name" name="name" value="name" id="basename">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputEmail1">Friends</label>
-              <input type="email" class="form-control" placeholder="Enter email" name="email1" value="email1" id="exampleInputEmail1">
-            </div>
-            <div class="form-group">
-              <input type="email" class="form-control" placeholder="Enter email" name="email2" value="email2" id="exampleInputEmail2">
-            </div>
-            <div class="form-group">
-              <input type="email" class="form-control" placeholder="Enter email" name="email3" value="email3" id="exampleInputEmail3">
-            </div>
-            <div><button type="submit" class="btn btn-primary" value="Create" name = "Create">Create</button></div>
-          </form>
+      <?php
+        foreach($db->query("SELECT * FROM $myTableName") as $row)
+        {
+          echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
+          echo "
+            <form role='form' action='' method='post'> <div class='form-group'>
+                          <input type='hidden' name='todelete' value=".$row['itemTableShort']."></input>
+                          <button type='submit' class='btn btn-primary' value='DeleteDB' name = 'delete'>".$row['itemTableShort']."</button>
+                    </div> </form>
+          ";
+        }
+      ?>
+        
       </div>
     </div>
   </div>
