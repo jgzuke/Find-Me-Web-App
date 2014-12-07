@@ -15,3 +15,7 @@ body {
 #mymargin {
 	height: 170px;
 }
+#deletelist {
+	margin-left: 10px;
+	margin-right: 10px;
+}

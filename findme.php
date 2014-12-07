@@ -118,9 +118,15 @@ if(isset($_POST['moving']))
   } catch (PDOException $ex) {}
 }
 ?>
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
           <a class="navbar-brand" href="">Find Me</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
@@ -128,17 +134,27 @@ if(isset($_POST['moving']))
               <?php
                 foreach($db->query("SELECT * FROM $myTableName") as $row)
                 {
-                  echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
+                  if($row['itemTableShort'] == substr($_SERVER['REQUEST_URI'], 1))
+                  {
+                    echo "<li class='active'><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
+                  } else
+                  {
+                    echo "<li><a href=".$row['itemTableShort'].">".$row['itemTableShort']."</a></li>";
+                  }
                 }
-                echo "<li><a href=".UserService::createLogoutUrl($_SERVER['REQUEST_URI']).">Logout</a><li>";
                ?>
-               <button type="button" style="color: #777" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#deleteListModal">Delete List</button>
-               <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#newListModal">New List</button>
+               <li><button type="button" id = "deletelist" style="color: #777" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#deleteListModal">Delete List</button></li>
+               <li><button type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#newListModal">New List</button></li>
           </ul>
-          
+          <ul class="nav navbar-nav navbar-right">
+            <?php
+            echo "<li><a href=".UserService::createLogoutUrl($_SERVER['REQUEST_URI']).">Logout</a><li>";
+               ?>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+
     <div class="container" id = "mymargin"></div>
     <div class="row" id = "myrows">
       <div class="col-md-6">
