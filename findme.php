@@ -118,7 +118,7 @@ if(isset($_POST['moving']))
   } catch (PDOException $ex) {}
 }
 ?>
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top shadow" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -157,7 +157,7 @@ if(isset($_POST['moving']))
 
     <div class="container" id = "mymargin"></div>
     <div class="row" id = "myrows">
-      <div class="col-md-6">
+      <div class="col-md-6" id = "findrow">
         <h1 class="mytext">Find Item</h1>
         <div class = "myforms">
           <form role="form" action="" method="post">
@@ -197,7 +197,7 @@ if(isset($_POST['showall'])) {
 }
 ?>
      </div>
-      <div class="col-md-6">
+      <div class="col-md-6" id = "findrow">
         <h1 class="mytext">Move Item</h1>
         <div class = "myforms">
           <form role="form" action="" method="post">
